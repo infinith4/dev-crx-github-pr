@@ -1,8 +1,8 @@
 {
-  "name": "dev-langfuse",
+  "name": "dev-crx-github-pr",
   "dockerComposeFile": "docker-compose.yml",
   "service": "devcontainer",
-  "workspaceFolder": "/workspaces/dev-langfuse",
+  "workspaceFolder": "/workspaces/dev-crx-github-pr",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "22"
@@ -10,7 +10,7 @@
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12"
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "customizations": {
     "vscode": {
@@ -21,8 +21,15 @@
         "esbenp.prettier-vscode",
         "Anthropic.claude-code",
         "yy0931.vscode-sqlite3-editor",
-        "shd101wyy.markdown-preview-enhanced"
-      ]
+        "shd101wyy.markdown-preview-enhanced",
+        "ms-vscode.vscode-typescript-next",
+        "ms-playwright.playwright",
+        "wix.vscode-import-cost"
+      ],
+      "settings": {
+        "js/ts.tsdk.path": "node_modules/typescript/lib",
+        "editor.formatOnSave": true
+      }
     }
   },
   "postCreateCommand": ".devcontainer/postCreate.sh"

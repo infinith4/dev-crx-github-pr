@@ -4,5 +4,8 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ..:/workspaces/dev-langfuse:cached
+      - ..:/workspaces/dev-crx-github-pr:cached
     command: sleep infinity
+    shm_size: '2gb'
+    cap_add:
+      - SYS_ADMIN
