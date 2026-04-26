@@ -156,7 +156,7 @@ export type ExtensionSettings = {
 Default values:
 
 - `enableCommentExpansion`: `true`
-- `autoExpandComments`: `false`
+- `autoExpandComments`: `true`
 - `includeResolvedThreads`: `true`
 - `includeOutdatedThreads`: `false`
 - `enableResolveControls`: `false`

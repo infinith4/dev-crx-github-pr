@@ -92,7 +92,7 @@ export type ExtensionSettings = {
 export const DEFAULT_SETTINGS: ExtensionSettings = {
   schemaVersion: 1,
   enableCommentExpansion: true,
-  autoExpandComments: false,
+  autoExpandComments: true,
   includeResolvedThreads: true,
   includeOutdatedThreads: false,
   enableResolveControls: false,

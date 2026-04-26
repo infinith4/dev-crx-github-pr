@@ -9,7 +9,6 @@ await mkdir(outdir, { recursive: true });
 
 const common = {
   bundle: true,
-  format: 'esm',
   target: 'es2022',
   sourcemap: true,
   logLevel: 'info',
@@ -17,10 +16,19 @@ const common = {
 
 await build({
   ...common,
+  format: 'iife',
   entryPoints: {
     content: 'src/content/index.ts',
-    background: 'src/background/index.ts',
     options: 'src/options/index.ts',
+  },
+  outdir,
+});
+
+await build({
+  ...common,
+  format: 'esm',
+  entryPoints: {
+    background: 'src/background/index.ts',
   },
   outdir,
 });

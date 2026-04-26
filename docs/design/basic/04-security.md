@@ -41,7 +41,7 @@ Design constraints:
 Default settings:
 
 - `enableCommentExpansion`: true
-- `autoExpandComments`: false
+- `autoExpandComments`: true
 - `includeResolvedThreads`: true
 - `includeOutdatedThreads`: false
 - `enableResolveControls`: false
@@ -50,7 +50,7 @@ Default settings:
 Security rationale:
 
 - Read-only comment expansion is available by default.
-- Automatic expansion is off to avoid unexpected UI activity.
+- Automatic expansion is on so the extension immediately performs its primary read-only value on supported PR pages.
 - Resolve controls are off because they mutate GitHub state.
 - Bulk resolve operations are off because they can affect many threads at once.
 

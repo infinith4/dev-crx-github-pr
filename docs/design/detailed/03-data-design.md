@@ -37,7 +37,7 @@ Defaults:
 export const DEFAULT_STORED_SETTINGS: StoredSettings = {
   schemaVersion: 1,
   enableCommentExpansion: true,
-  autoExpandComments: false,
+  autoExpandComments: true,
   includeResolvedThreads: true,
   includeOutdatedThreads: false,
   enableResolveControls: false,
