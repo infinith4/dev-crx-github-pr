@@ -1,0 +1,56 @@
+.gh-pr-tools {
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--bgColor-default, #ffffff);
+  color: var(--fgColor-default, #1f2328);
+  padding: 10px 12px;
+  margin: 8px 0 16px;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gh-pr-tools__title {
+  display: inline-flex;
+  margin-right: 12px;
+}
+
+.gh-pr-tools__actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  vertical-align: middle;
+}
+
+.gh-pr-tools__button,
+.gh-pr-tools-resolve-controls__button {
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, #f6f8fa);
+  color: var(--fgColor-default, #1f2328);
+  cursor: pointer;
+  font: inherit;
+  padding: 4px 8px;
+}
+
+.gh-pr-tools__button:hover,
+.gh-pr-tools-resolve-controls__button:hover {
+  background: var(--button-default-bgColor-hover, #f3f4f6);
+}
+
+.gh-pr-tools__button:disabled,
+.gh-pr-tools-resolve-controls__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.gh-pr-tools__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  color: var(--fgColor-muted, #656d76);
+}
+
+.gh-pr-tools-resolve-controls {
+  display: inline-flex;
+  margin: 0 8px 8px 0;
+}

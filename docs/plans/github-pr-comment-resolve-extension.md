@@ -13,12 +13,13 @@ The extension has two independent capability groups. `Comment` controls only dis
 ## Progress
 
 - [x] (2026-04-26 06:28 JST) Created the initial implementation plan for a Chrome Extension that separates `Comment` display features from `Resolve/Unresolve` mutation features.
-- [ ] Scaffold the Manifest V3 Chrome Extension project.
-- [ ] Implement PR page detection and non-mutating comment expansion.
-- [ ] Add options storage for independent `Comment` and `Resolve/Unresolve` feature toggles.
-- [ ] Add GitHub GraphQL client for optional `Resolve/Unresolve` operations.
-- [ ] Add unit and integration tests for scanner, settings, and API operations.
-- [ ] Validate the extension manually on GitHub PR pages and fixture pages.
+- [x] (2026-04-26 07:08 JST) Scaffolded the Manifest V3 Chrome Extension project with TypeScript, esbuild, Vitest, `manifest.json`, content script, background service worker, and options page.
+- [x] (2026-04-26 07:08 JST) Implemented PR page detection and non-mutating comment expansion through a toolbar, DOM scanner, and throttled expansion runner.
+- [x] (2026-04-26 07:08 JST) Added options storage for independent `Comment` and `Resolve/Unresolve` feature toggles.
+- [x] (2026-04-26 07:08 JST) Added GitHub GraphQL client and background message handling for optional `Resolve/Unresolve` operations.
+- [x] (2026-04-26 07:08 JST) Added unit tests for URL parsing, settings normalization, DOM scanner classification, and GraphQL mutation handling.
+- [x] (2026-04-26 07:08 JST) Validated with `npm test`, `npm run build`, and `npx tsc --noEmit`.
+- [ ] Manually validate the unpacked extension on real GitHub PR pages with collapsed, resolved, and outdated comments.
 
 ## Surprises & Discoveries
 
@@ -26,6 +27,8 @@ The extension has two independent capability groups. `Comment` controls only dis
   Evidence: GitHub GraphQL mutation documentation lists both mutations and returns the affected `PullRequestReviewThread`.
 - Observation: Chrome Manifest V3 content scripts can be injected for matching GitHub PR URLs and can communicate with extension storage/background code.
   Evidence: Chrome extension documentation describes `content_scripts` in `manifest.json` and isolated content script execution.
+- Observation: jsdom does not calculate normal browser layout values such as `offsetParent` for simple fixture elements.
+  Evidence: Initial scanner tests returned no visible targets until `isVisible` treated connected jsdom elements without hidden styles as visible.
 
 ## Decision Log
 
@@ -41,9 +44,13 @@ The extension has two independent capability groups. `Comment` controls only dis
   Rationale: `Resolve/Unresolve` is a write operation and should be routed through supported API mutations instead of trying to automate private GitHub UI behavior.
   Date/Author: 2026-04-26 / Codex
 
+- Decision: Store all extension settings in `chrome.storage.local` for the first implementation.
+  Rationale: The initial product is local-first, token-bearing, and does not require cross-device sync. Keeping the storage path unified reduces implementation complexity while preserving the option to split non-sensitive preferences into sync storage later.
+  Date/Author: 2026-04-26 / Codex
+
 ## Outcomes & Retrospective
 
-Initial planning is complete. The project now has a concrete scope split between read-only comment expansion and optional write-capable resolve controls. Implementation remains to be completed and validated.
+Initial implementation is complete for the documented MVP. The repository now contains a buildable Chrome Extension with a GitHub PR toolbar, read-only comment expansion, independent settings, optional resolve/unresolve GraphQL plumbing, and unit coverage for the core pure modules. Automated validation passes with `npm test`, `npm run build`, and `npx tsc --noEmit`. Remaining validation is manual testing against real GitHub PR pages because live GitHub DOM variants and authenticated resolve actions cannot be proven from local unit tests alone.
 
 ## Context and Orientation
 

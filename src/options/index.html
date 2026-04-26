@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GitHub PR Comment Tools</title>
+    <style>
+      body {
+        color: #1f2328;
+        font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        padding: 24px;
+      }
+
+      main {
+        max-width: 760px;
+      }
+
+      fieldset {
+        border: 1px solid #d0d7de;
+        border-radius: 6px;
+        margin: 0 0 18px;
+        padding: 16px;
+      }
+
+      label {
+        display: block;
+        margin: 10px 0;
+      }
+
+      input[type="password"],
+      textarea {
+        box-sizing: border-box;
+        display: block;
+        margin-top: 6px;
+        max-width: 560px;
+        padding: 8px;
+        width: 100%;
+      }
+
+      button {
+        border: 1px solid #d0d7de;
+        border-radius: 6px;
+        background: #f6f8fa;
+        cursor: pointer;
+        padding: 6px 12px;
+      }
+
+      .status {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>GitHub PR Comment Tools</h1>
+      <form id="options-form">
+        <fieldset>
+          <legend>Comment</legend>
+          <label><input type="checkbox" id="enableCommentExpansion" /> Enable comment expansion</label>
+          <label><input type="checkbox" id="autoExpandComments" /> Auto expand comments</label>
+          <label><input type="checkbox" id="includeResolvedThreads" /> Include resolved threads</label>
+          <label><input type="checkbox" id="includeOutdatedThreads" /> Include outdated threads</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Resolve / Unresolve</legend>
+          <label><input type="checkbox" id="enableResolveControls" /> Enable resolve controls</label>
+          <label><input type="checkbox" id="allowBulkResolveUnresolve" /> Allow bulk resolve/unresolve</label>
+          <label>
+            GitHub token
+            <input type="password" id="githubToken" autocomplete="off" placeholder="Leave blank to keep current token" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>GitHub Enterprise</legend>
+          <label>
+            Enterprise hosts, one per line
+            <textarea id="githubEnterpriseHosts" rows="4" placeholder="github.example.com"></textarea>
+          </label>
+        </fieldset>
+
+        <button type="submit">Save</button>
+        <span id="status" class="status" role="status" aria-live="polite"></span>
+      </form>
+    </main>
+    <script type="module" src="./options.js"></script>
+  </body>
+</html>

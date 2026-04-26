@@ -4,6 +4,10 @@ set -euo pipefail
 npm config set prefix "$HOME/.npm-global"
 npm install -g eslint prettier @openai/codex web-ext typescript
 
+if [ -f package-lock.json ]; then
+  npm ci
+fi
+
 pip install --user ruff black playwright
 python -m playwright install chromium --with-deps
 
