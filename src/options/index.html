@@ -23,6 +23,22 @@
         padding: 16px;
       }
 
+      .help {
+        color: #656d76;
+        margin: 8px 0 12px;
+      }
+
+      .help ul {
+        margin: 8px 0 0 20px;
+        padding: 0;
+      }
+
+      .help code {
+        background: #f6f8fa;
+        border-radius: 4px;
+        padding: 1px 4px;
+      }
+
       label {
         display: block;
         margin: 10px 0;
@@ -65,6 +81,14 @@
 
         <fieldset>
           <legend>Resolve / Unresolve</legend>
+          <div class="help">
+            <p>Comment expansion does not require a token. A token is required only when Resolve / Unresolve controls are enabled.</p>
+            <p>Recommended token: GitHub Fine-grained personal access token with access limited to the target repositories.</p>
+            <ul>
+              <li>Repository permission: <code>Pull requests: Read and write</code></li>
+              <li>Classic token fallback: use the <code>repo</code> scope only when a fine-grained token is not practical.</li>
+            </ul>
+          </div>
           <label><input type="checkbox" id="enableResolveControls" /> Enable resolve controls</label>
           <label><input type="checkbox" id="allowBulkResolveUnresolve" /> Allow bulk resolve/unresolve</label>
           <label>

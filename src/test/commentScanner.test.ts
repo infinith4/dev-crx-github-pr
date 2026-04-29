@@ -56,6 +56,59 @@ describe('commentScanner', () => {
     expect(targets.map((target) => target.kind)).toEqual(['resolved-thread']);
   });
 
+  it('finds GitHub-style resolved conversation summaries', () => {
+    document.body.innerHTML = `
+      <main>
+        <details class="discussion-item">
+          <summary aria-expanded="false">1 resolved conversation</summary>
+          <div>Resolved by reviewer</div>
+        </details>
+        <button aria-label="Expand resolved thread">Resolved</button>
+        <button aria-label="View changes">Files changed</button>
+      </main>
+    `;
+
+    const targets = findCommentExpansionTargets(
+      document,
+      { ...DEFAULT_SETTINGS, includeResolvedThreads: false },
+      { mode: 'resolved-only' },
+    );
+
+    expect(targets.map((target) => target.kind)).toEqual(['resolved-thread', 'resolved-thread']);
+  });
+
+  it('treats full conversation links inside resolved context as resolved targets', () => {
+    document.body.innerHTML = `
+      <main>
+        <div class="review-thread">
+          <span>Resolved</span>
+          <a href="#">View full conversation</a>
+        </div>
+      </main>
+    `;
+
+    const targets = findCommentExpansionTargets(document, DEFAULT_SETTINGS, { mode: 'resolved-only' });
+
+    expect(targets.map((target) => target.kind)).toEqual(['resolved-thread']);
+  });
+
+  it('finds generic show-more controls when an ancestor marks the thread resolved', () => {
+    document.body.innerHTML = `
+      <main>
+        <div>
+          <section>
+            <p>Resolved conversation</p>
+            <div><button>Show more</button></div>
+          </section>
+        </div>
+      </main>
+    `;
+
+    const targets = findCommentExpansionTargets(document, DEFAULT_SETTINGS, { mode: 'resolved-only' });
+
+    expect(targets.map((target) => target.kind)).toEqual(['resolved-thread']);
+  });
+
   it('ignores extension toolbar buttons', () => {
     document.body.innerHTML = `
       <section data-github-pr-comment-tools-root="true"><button>Show comments</button></section>

@@ -59,9 +59,9 @@ export function findCommentExpansionTargets(
 function classifyControl(label: string, nearbyText: string): CommentExpansionTargetKind | null {
   const normalizedLabel = normalizeText(label);
   const combined = normalizeText(`${label} ${nearbyText}`);
-  if (normalizedLabel.includes('view full conversation')) return 'full-conversation';
   if (isResolvedTarget(combined, normalizedLabel)) return 'resolved-thread';
   if (isOutdatedTarget(combined, normalizedLabel)) return 'outdated-thread';
+  if (normalizedLabel.includes('view full conversation')) return 'full-conversation';
   if (normalizedLabel.includes('load more')) return 'load-more';
   if (
     normalizedLabel.includes('show more') ||
@@ -85,11 +85,32 @@ function isAllowedBySettings(
 }
 
 function isResolvedTarget(combined: string, label: string): boolean {
-  return combined.includes('resolved') && (label.includes('show') || label.includes('view') || label.includes('conversation'));
+  if (!combined.includes('resolved')) return false;
+  return (
+    hasExpansionIntent(label) ||
+    /\b\d+\s+resolved\s+(conversation|conversations|thread|threads)\b/.test(combined) ||
+    /\bresolved\s+(conversation|conversations|thread|threads)\b/.test(combined)
+  );
 }
 
 function isOutdatedTarget(combined: string, label: string): boolean {
-  return combined.includes('outdated') && (label.includes('show') || label.includes('view') || label.includes('conversation'));
+  if (!combined.includes('outdated')) return false;
+  return hasExpansionIntent(label) || /\boutdated\s+(conversation|conversations|thread|threads)\b/.test(combined);
+}
+
+function hasExpansionIntent(label: string): boolean {
+  return (
+    label.includes('load more') ||
+    label.includes('more') ||
+    label.includes('show') ||
+    label.includes('view') ||
+    label.includes('expand') ||
+    label.includes('open') ||
+    label.includes('conversation') ||
+    label.includes('conversations') ||
+    label.includes('thread') ||
+    label.includes('threads')
+  );
 }
 
 function getElementLabel(element: HTMLElement): string {
@@ -103,11 +124,25 @@ function getElementLabel(element: HTMLElement): string {
 }
 
 function getNearbyText(element: HTMLElement): string {
-  const container =
-    element.closest('[data-testid], [id*="discussion"], [class*="discussion"], [class*="review"], details') ??
-    element.parentElement;
+  const container = findContextContainer(element);
   if (!container || container === document.body || container.tagName.toLowerCase() === 'main') return '';
   return normalizeText((container?.textContent ?? '').slice(0, 600));
+}
+
+function findContextContainer(element: HTMLElement): Element | null {
+  const semantic = element.closest('[data-testid], [id*="discussion"], [class*="discussion"], [class*="review"], details');
+  if (semantic) return semantic;
+
+  let current: Element | null = element.parentElement;
+  for (let depth = 0; current && depth < 4; depth += 1) {
+    const tag = current.tagName.toLowerCase();
+    if (current === document.body || tag === 'main') return element.parentElement;
+    const text = normalizeText((current.textContent ?? '').slice(0, 600));
+    if (text.includes('resolved') || text.includes('outdated')) return current;
+    current = current.parentElement;
+  }
+
+  return element.parentElement;
 }
 
 function buildTargetKey(
