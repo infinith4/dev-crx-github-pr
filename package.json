@@ -6,7 +6,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "version:check": "node scripts/check-version.mjs",
+    "package:extension": "npm run build && node scripts/package-extension.mjs"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.283",

@@ -1,0 +1,143 @@
+name: Release Chrome Extension
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Version tag (e.g. v1.2.3). Required for workflow_dispatch.'
+        required: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - run: npm run build
+
+      - name: Validate versions
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          MANIFEST_VERSION=$(node -p "require('./manifest.json').version")
+
+          if [ "$PACKAGE_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "Error: package.json ($PACKAGE_VERSION) and manifest.json ($MANIFEST_VERSION) versions differ"
+            exit 1
+          fi
+
+          # When triggered by a tag, verify tag matches package version
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+              echo "Error: package.json ($PACKAGE_VERSION) and tag ($TAG_VERSION) versions differ"
+              exit 1
+            fi
+          fi
+
+          echo "VERSION=$PACKAGE_VERSION" >> "$GITHUB_ENV"
+          echo "Versions validated: $PACKAGE_VERSION"
+
+      - name: Package extension
+        run: |
+          mkdir -p release/package
+          cp manifest.json release/package/manifest.json
+          cp -R dist release/package/dist
+          find release/package/dist -name '*.map' -type f -delete
+          (cd release/package && zip -r "../github-pr-comment-tools-${VERSION}.zip" manifest.json dist)
+          echo "ZIP_PATH=release/github-pr-comment-tools-${VERSION}.zip" >> "$GITHUB_ENV"
+
+      - name: Verify ZIP contents
+        run: unzip -l "$ZIP_PATH"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-${{ env.VERSION }}
+          path: ${{ env.ZIP_PATH }}
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_NOTES=$(cat <<'EOF'
+          ## Installation
+
+          1. Download the ZIP artifact attached to this release.
+          2. Unzip it to a local folder.
+          3. Open Chrome → `chrome://extensions` → enable **Developer mode**.
+          4. Click **Load unpacked** and select the unzipped folder.
+
+          ## Chrome Web Store
+
+          This version has been submitted to the Chrome Web Store for review.
+          EOF
+          )
+
+          gh release create "v${VERSION}" \
+            --title "v${VERSION}" \
+            --notes "$RELEASE_NOTES" \
+            --draft \
+            "$ZIP_PATH"
+
+      # Chrome Web Store upload — requires GCP Workload Identity Federation secrets.
+      # Set CWS_PUBLISHER_ID, CWS_EXTENSION_ID, GCP_WORKLOAD_IDENTITY_PROVIDER,
+      # and GCP_SERVICE_ACCOUNT in repository secrets to enable.
+      - id: auth
+        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
+
+      - name: Upload to Chrome Web Store
+        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/cws-upload.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+            -X POST \
+            -T "$ZIP_PATH" \
+            "https://chromewebstore.googleapis.com/upload/v2/publishers/${{ secrets.CWS_PUBLISHER_ID }}/items/${{ secrets.CWS_EXTENSION_ID }}:upload")
+
+          echo "HTTP status: $HTTP_STATUS"
+          cat /tmp/cws-upload.json
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Upload failed with status $HTTP_STATUS"
+            exit 1
+          fi
+
+      - name: Submit for review
+        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/cws-publish.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+            -X POST \
+            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CWS_PUBLISHER_ID }}/items/${{ secrets.CWS_EXTENSION_ID }}:publish")
+
+          echo "HTTP status: $HTTP_STATUS"
+          cat /tmp/cws-publish.json
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Publish failed with status $HTTP_STATUS"
+            exit 1
+          fi
+
+          echo "Submitted for review successfully."

@@ -117,3 +117,4 @@ Thumbs.db
 *.bak
 *.tmp
 *.temp
+/release/*.zip

@@ -1,0 +1,41 @@
+{
+  "skill_name": "release-crx",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "GitHub PR Comment Tools の Chrome Extension を v0.2.0 としてリリースしたい。現在は v0.1.0 で、新しい機能を追加してテストも全部通っている状態。リリース手順を案内してほしい。",
+      "expected_output": "リリース全ステップの案内：バージョンバンプ（package.json と manifest.json の両方）、リリース前チェックリスト確認、git コミット・タグ作成・push 手順、GitHub Actions 監視方法、GitHub Release の公開と Chrome Web Store の確認手順を含む完全な案内",
+      "files": [],
+      "assertions": [
+        "package.json と manifest.json の両方のバージョンを変更する手順が含まれている",
+        "git tag v0.2.0 と git push origin v0.2.0 のコマンドが示されている",
+        "リリース前チェックリストに npm test と npm run build が含まれている",
+        "GitHub Actions のワークフロー監視コマンド（gh run list など）が示されている",
+        "GitHub Release の draft 公開手順が含まれている"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Chrome Extension をリリースしようとしたら node scripts/check-version.mjs が失敗した。package.json は 0.2.0 なのに manifest.json はまだ 0.1.0 のままだった。この状態からリリースを進めるにはどうすればいい？",
+      "expected_output": "バージョン不一致の修正手順（manifest.json を 0.2.0 に更新）、確認コマンドの再実行、その後のリリース継続手順",
+      "files": [],
+      "assertions": [
+        "manifest.json の version を 0.2.0 に変更する具体的な手順が示されている",
+        "node scripts/check-version.mjs を再実行して確認するよう指示している",
+        "修正後に npm test または npm run build の実行を促している"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "v0.3.0 タグを push したあと GitHub Actions の release-chrome-extension ワークフローが失敗した。どうすればいい？また、もし審査まで進んでいた場合に取り消す方法も教えてほしい。",
+      "expected_output": "ワークフロー失敗時の調査方法（gh run view）、原因別の対処（バージョン不一致、ビルドエラーなど）、誤ったタグの削除方法、審査提出済みの場合のキャンセル方法",
+      "files": [],
+      "assertions": [
+        "gh run view または gh run watch でログを確認する手順が含まれている",
+        "誤ったタグを削除するコマンド（git tag -d と git push origin --delete）が示されている",
+        "審査キャンセルの方法（Dashboard または cancelSubmission API）が含まれている",
+        "修正後に新しいタグで再リリースする流れが説明されている"
+      ]
+    }
+  ]
+}

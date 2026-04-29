@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub PR Comment Tools",
+  "version": "0.1.0",
+  "description": "Expand hidden GitHub PR comments and optionally resolve or unresolve review threads.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://github.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*/*/pull/*"],
+      "js": ["dist/content.js"],
+      "css": ["dist/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "dist/background.js",
+    "type": "module"
+  },
+  "options_page": "dist/options.html"
+}

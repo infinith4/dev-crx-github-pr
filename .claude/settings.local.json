@@ -44,7 +44,18 @@
       "Bash(apt list --installed)",
       "Bash(snap list)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(node scripts/check-version.mjs)",
+      "Bash(npm run *)",
+      "Bash(npm ci *)",
+      "Bash(powershell -NoProfile -Command \"Add-Type -AssemblyName System.IO.Compression.FileSystem; [IO.Compression.ZipFile]::OpenRead\\('release/github-pr-comment-tools-0.1.0.zip'\\).Entries | Select-Object FullName, Length\")",
+      "Bash(node -p \"JSON.stringify\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('package.json','utf8'\\)\\).scripts, null, 2\\)\")",
+      "Bash(mkdir -p \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/iteration-1/normal-release-flow/with_skill/outputs\")",
+      "Bash(mkdir -p \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/iteration-1/normal-release-flow/without_skill/outputs\")",
+      "Bash(mkdir -p \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/iteration-1/version-mismatch-fix/with_skill/outputs\")",
+      "Bash(mkdir -p \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/iteration-1/version-mismatch-fix/without_skill/outputs\")",
+      "Bash(mkdir -p \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/iteration-1/workflow-failure-rollback/with_skill/outputs\")",
+      "Bash(start \"c:/Projects/github/infinith4/dev-crx-github-pr/.claude/skills/release-crx-workspace/review.html\")"
     ]
   }
 }
