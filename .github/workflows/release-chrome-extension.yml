@@ -16,6 +16,11 @@ jobs:
     permissions:
       contents: write
       id-token: write
+    env:
+      CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+      CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+      GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
     steps:
       - uses: actions/checkout@v4
@@ -100,10 +105,11 @@ jobs:
       # and GCP_SERVICE_ACCOUNT in repository secrets to enable automatic CWS upload.
       - name: Check CWS secrets
         id: cws-check
-        env:
-          PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
         run: |
-          if [ -n "$PROVIDER" ]; then
+          if [ -n "$CWS_PUBLISHER_ID" ] && \
+             [ -n "$CWS_EXTENSION_ID" ] && \
+             [ -n "$GCP_WORKLOAD_IDENTITY_PROVIDER" ] && \
+             [ -n "$GCP_SERVICE_ACCOUNT" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
@@ -115,8 +121,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
           access_token_scopes: https://www.googleapis.com/auth/chromewebstore
 
       - name: Upload to Chrome Web Store
@@ -126,7 +132,7 @@ jobs:
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
             -X POST \
             -T "$ZIP_PATH" \
-            "https://chromewebstore.googleapis.com/upload/v2/publishers/${{ secrets.CWS_PUBLISHER_ID }}/items/${{ secrets.CWS_EXTENSION_ID }}:upload")
+            "https://chromewebstore.googleapis.com/upload/v2/publishers/${CWS_PUBLISHER_ID}/items/${CWS_EXTENSION_ID}:upload")
 
           echo "HTTP status: $HTTP_STATUS"
           cat /tmp/cws-upload.json
@@ -142,7 +148,7 @@ jobs:
           HTTP_STATUS=$(curl -s -o /tmp/cws-publish.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
             -X POST \
-            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CWS_PUBLISHER_ID }}/items/${{ secrets.CWS_EXTENSION_ID }}:publish")
+            "https://chromewebstore.googleapis.com/v2/publishers/${CWS_PUBLISHER_ID}/items/${CWS_EXTENSION_ID}:publish")
 
           echo "HTTP status: $HTTP_STATUS"
           cat /tmp/cws-publish.json
