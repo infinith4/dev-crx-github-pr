@@ -95,11 +95,23 @@ jobs:
             --draft \
             "$ZIP_PATH"
 
-      # Chrome Web Store upload — requires GCP Workload Identity Federation secrets.
+      # Check if Chrome Web Store secrets are configured.
       # Set CWS_PUBLISHER_ID, CWS_EXTENSION_ID, GCP_WORKLOAD_IDENTITY_PROVIDER,
-      # and GCP_SERVICE_ACCOUNT in repository secrets to enable.
+      # and GCP_SERVICE_ACCOUNT in repository secrets to enable automatic CWS upload.
+      - name: Check CWS secrets
+        id: cws-check
+        env:
+          PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        run: |
+          if [ -n "$PROVIDER" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "CWS secrets not configured — skipping Chrome Web Store upload."
+          fi
+
       - id: auth
-        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        if: steps.cws-check.outputs.configured == 'true'
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -108,7 +120,7 @@ jobs:
           access_token_scopes: https://www.googleapis.com/auth/chromewebstore
 
       - name: Upload to Chrome Web Store
-        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        if: steps.cws-check.outputs.configured == 'true'
         run: |
           HTTP_STATUS=$(curl -s -o /tmp/cws-upload.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
@@ -125,7 +137,7 @@ jobs:
           fi
 
       - name: Submit for review
-        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        if: steps.cws-check.outputs.configured == 'true'
         run: |
           HTTP_STATUS=$(curl -s -o /tmp/cws-publish.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
