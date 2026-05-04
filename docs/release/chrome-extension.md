@@ -58,10 +58,25 @@
 
 CI/CD では Chrome Web Store API V2 の service account 認証を優先する。人間の OAuth 操作をリリース時に要求しないため、自動化に向いている。
 
-### 3.1 パーミッション申請理由（Privacy タブ）
+### 3.1 申請文言
 
-Chrome Web Store Developer Dashboard の **Privacy** タブにある「権限の正当な理由」欄に入力する文言。  
-コピペして使用する。
+Chrome Web Store Developer Dashboard の各タブに入力する文言。コピペして使用する。
+
+#### 単一用途（Store Listing タブ）
+
+Chrome Web Store は「拡張機能の用途は単一で範囲の限られたわかりやすいものであること」を要求する。
+
+> **日本語**
+>
+> GitHub の Pull Request ページ上で、折りたたまれたレビューコメントを展開し、レビュースレッドを resolve / unresolve する機能に特化した拡張機能です。動作対象は `https://github.com/*/*/pull/*` の URL に限定されます。
+
+> **English**
+>
+> A focused extension for GitHub Pull Request pages that expands collapsed review comments and provides resolve / unresolve controls for review threads. It operates exclusively on `https://github.com/*/*/pull/*` URLs.
+
+---
+
+**Privacy タブ**にある「権限の正当な理由」欄に入力する文言。
 
 プライバシーポリシーページ（Store Listing タブの「プライバシーポリシーの URL」欄に入力する）:
 
