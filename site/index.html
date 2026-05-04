@@ -2,10 +2,361 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=privacy-policy.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="GitHub PR Comment Tools — GitHub の Pull Request で折りたたまれたレビューコメントを展開し、resolve / unresolve 操作を追加する Chrome 拡張機能" />
     <title>GitHub PR Comment Tools</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      :root {
+        --bg: #ffffff;
+        --fg: #1f2328;
+        --muted: #656d76;
+        --border: #d0d7de;
+        --accent: #0969da;
+        --accent-hover: #0550ae;
+        --surface: #f6f8fa;
+        --green: #1a7f37;
+        --green-bg: #dafbe1;
+      }
+
+      body {
+        color: var(--fg);
+        font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        margin: 0;
+        background: var(--bg);
+      }
+
+      /* ── Header ── */
+      header {
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--fg);
+        text-decoration: none;
+      }
+
+      .logo svg { flex-shrink: 0; }
+
+      nav a {
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-decoration: none;
+        margin-left: 20px;
+      }
+
+      nav a:hover { color: var(--accent); }
+
+      /* ── Hero ── */
+      .hero {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 64px 24px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
+        font-weight: 600;
+        margin: 0 0 16px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero p {
+        color: var(--muted);
+        font-size: 1.125rem;
+        margin: 0 auto 32px;
+        max-width: 560px;
+      }
+
+      .cta-group {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 6px;
+        display: inline-block;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        padding: 10px 20px;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+
+      .btn:hover { opacity: 0.85; }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .btn-secondary {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--fg);
+      }
+
+      /* ── Features ── */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 56px 24px 80px;
+      }
+
+      .section-label {
+        color: var(--muted);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        margin: 0 0 24px;
+        text-transform: uppercase;
+      }
+
+      .features {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        margin-bottom: 56px;
+      }
+
+      .feature-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .feature-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .feature-card p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .badge {
+        background: var(--green-bg);
+        border-radius: 20px;
+        color: var(--green);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 8px;
+      }
+
+      /* ── How it works ── */
+      .steps {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 56px;
+        overflow: hidden;
+      }
+
+      .step {
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 40px 1fr;
+        padding: 20px 24px;
+      }
+
+      .step:last-child { border-bottom: none; }
+
+      .step-num {
+        align-items: center;
+        background: var(--accent);
+        border-radius: 50%;
+        color: #fff;
+        display: flex;
+        font-size: 0.875rem;
+        font-weight: 600;
+        height: 32px;
+        justify-content: center;
+        margin-top: 2px;
+        width: 32px;
+        flex-shrink: 0;
+      }
+
+      .step h3 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+
+      .step p {
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      code {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.85em;
+        padding: 1px 5px;
+      }
+
+      /* ── Privacy strip ── */
+      .privacy-strip {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px 24px;
+        margin-bottom: 40px;
+      }
+
+      .privacy-strip svg { flex-shrink: 0; margin-top: 2px; }
+
+      .privacy-strip h3 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+
+      .privacy-strip p {
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      .privacy-strip a { color: var(--accent); }
+
+      /* ── Footer ── */
+      footer {
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.875rem;
+        padding: 24px;
+        text-align: center;
+      }
+
+      footer a { color: var(--muted); }
+      footer a:hover { color: var(--accent); }
+    </style>
   </head>
   <body>
-    <p><a href="privacy-policy.html">Privacy Policy</a></p>
+    <header>
+      <a class="logo" href="/">
+        <!-- GitHub octocat-ish icon -->
+        <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        GitHub PR Comment Tools
+      </a>
+      <nav>
+        <a href="https://github.com/infinith4/dev-crx-github-pr" target="_blank" rel="noopener">GitHub</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <h1>GitHub PR のレビューをもっとスムーズに</h1>
+      <p>
+        折りたたまれたレビューコメントをワンクリックで展開。<br />
+        resolve / unresolve 操作をページから離れずに実行。
+      </p>
+      <div class="cta-group">
+        <a class="btn btn-primary" href="https://github.com/infinith4/dev-crx-github-pr" target="_blank" rel="noopener">GitHub で見る</a>
+        <a class="btn btn-secondary" href="privacy-policy.html">プライバシーポリシー</a>
+      </div>
+    </div>
+
+    <main>
+      <p class="section-label">機能</p>
+      <div class="features">
+        <div class="feature-card">
+          <h3>
+            💬 コメント展開
+            <span class="badge">No token</span>
+          </h3>
+          <p>「N 件の非表示のコメント」を自動または手動で展開。解決済み・旧バージョンのスレッドも表示対象に含められます。</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>✅ Resolve / Unresolve</h3>
+          <p>レビュースレッドをページから離れずに resolve / unresolve。一括操作にも対応しています。</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🏢 GitHub Enterprise 対応</h3>
+          <p>github.com に加え、GitHub Enterprise Server のホストも設定できます。</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🔒 プライバシー重視</h3>
+          <p>すべてのデータはブラウザの <code>chrome.storage.local</code> に保存。外部サーバーへの送信はありません。</p>
+        </div>
+      </div>
+
+      <p class="section-label">使い方</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <h3>拡張機能をインストール</h3>
+            <p>Chrome Web Store からインストールします。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <h3>GitHub の PR ページを開く</h3>
+            <p><code>https://github.com/*/pull/*</code> のページで自動的に動作します。コメント展開にトークンは不要です。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h3>（任意）Resolve 操作を有効化</h3>
+            <p>Options ページで GitHub Personal Access Token を登録すると、resolve / unresolve ボタンが有効になります。必要な権限は <code>Pull requests: Read and write</code> のみです。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="privacy-strip">
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="var(--green)" aria-hidden="true">
+          <path d="M8.533.133a1.75 1.75 0 00-1.066 0l-5.25 1.68A1.75 1.75 0 001 3.48V8c0 3.572 2.111 5.817 6.042 7.61a1.75 1.75 0 001.416 0C12.39 13.817 15 11.571 15 8V3.48a1.75 1.75 0 00-1.217-1.667L8.533.133zm-.61 1.429a.25.25 0 01.153 0l5.25 1.68a.25.25 0 01.174.238V8c0 2.905-1.832 4.729-5.42 6.388a.25.25 0 01-.204 0C4.332 12.729 2.5 10.905 2.5 8V3.48a.25.25 0 01.174-.238l5.25-1.68zM11.28 6.28a.75.75 0 00-1.06-1.06L7 8.44 5.78 7.22a.75.75 0 00-1.06 1.06l1.75 1.75a.75.75 0 001.06 0l3.75-3.75z"/>
+        </svg>
+        <div>
+          <h3>データはブラウザ内にのみ保存されます</h3>
+          <p>
+            本拡張機能は収集したデータを外部に送信しません。GitHub トークンを含むすべての設定は <code>chrome.storage.local</code> に保存されます。
+            詳しくは <a href="privacy-policy.html">プライバシーポリシー</a> をご覧ください。
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      &copy; 2026 GitHub PR Comment Tools &mdash;
+      <a href="https://github.com/infinith4/dev-crx-github-pr" target="_blank" rel="noopener">Source on GitHub</a>
+      &mdash;
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </footer>
   </body>
 </html>
