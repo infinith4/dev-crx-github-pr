@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "workflow-failure-rollback",
+  "prompt": "GitHub Actions release-chrome-extension workflow failed after pushing v0.3.0 tag, how to fix and cancel CWS review",
+  "assertions": [
+    "gh run view or gh run watch commands to check logs are included",
+    "Commands to delete bad tag (git tag -d and git push origin --delete) are shown",
+    "CWS review cancellation method (Dashboard or cancelSubmission API) is included",
+    "Steps to re-release with a new tag after fixing are explained"
+  ]
+}

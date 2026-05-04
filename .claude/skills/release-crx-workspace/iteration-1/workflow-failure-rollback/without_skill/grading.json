@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "gh run view または gh run watch でログを確認する手順が含まれている",
+      "passed": true,
+      "evidence": "セクション 1 に 'gh run view <RUN_ID> --log-failed' と 'gh run watch <RUN_ID>' の両コマンドが示されている"
+    },
+    {
+      "text": "誤ったタグを削除するコマンド（git tag -d と git push origin --delete）が示されている",
+      "passed": true,
+      "evidence": "セクション 2 に 'git push origin --delete v0.3.0' と 'git tag --delete v0.3.0' が示されている（--delete は -d の長形式で同義）"
+    },
+    {
+      "text": "審査キャンセルの方法（Dashboard または cancelSubmission API）が含まれている",
+      "passed": true,
+      "evidence": "セクション 5 に方法 A（Developer Dashboard）と方法 B（rollback API）の両手順が含まれている。API エンドポイントは cancelSubmission ではなく rollback だが審査取り消しの概念は網羅されている"
+    },
+    {
+      "text": "修正後に新しいタグで再リリースする流れが説明されている",
+      "passed": true,
+      "evidence": "セクション 3 に 'git tag v0.3.0 → git push origin main → git push origin v0.3.0' の再リリース手順が含まれている"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

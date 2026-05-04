@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "normal-release-flow",
+  "prompt": "Release v0.2.0 of GitHub PR Comment Tools Chrome Extension from current v0.1.0",
+  "assertions": [
+    "package.json and manifest.json both version bump steps are included",
+    "git tag v0.2.0 and git push origin v0.2.0 commands are shown",
+    "pre-release checklist includes npm test and npm run build",
+    "GitHub Actions monitoring command (gh run list etc.) is shown",
+    "GitHub Release draft publish steps are included"
+  ]
+}

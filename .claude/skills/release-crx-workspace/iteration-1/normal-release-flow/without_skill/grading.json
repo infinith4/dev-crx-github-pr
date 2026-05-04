@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "package.json と manifest.json の両方のバージョンを変更する手順が含まれている",
+      "passed": true,
+      "evidence": "ステップ 1 で package.json と manifest.json の両方を 0.2.0 に変更するコードブロックが示されている"
+    },
+    {
+      "text": "git tag v0.2.0 と git push origin v0.2.0 のコマンドが示されている",
+      "passed": true,
+      "evidence": "ステップ 7 に 'git tag v0.2.0' と 'git push origin v0.2.0' の両コマンドがチェックリストにも含まれている"
+    },
+    {
+      "text": "リリース前チェックリストに npm test と npm run build が含まれている",
+      "passed": true,
+      "evidence": "ステップ 3 に 'npm test'、ステップ 2 に 'npm run build' が明示されており、末尾チェックリストにも両項目がある"
+    },
+    {
+      "text": "GitHub Actions のワークフロー監視コマンド（gh run list など）が示されている",
+      "passed": false,
+      "evidence": "ステップ 8 は 'GitHub リポジトリの Actions タブを開き' という UI 操作のみで、gh run list や gh run watch などの CLI コマンドが一切示されていない"
+    },
+    {
+      "text": "GitHub Release の draft 公開手順が含まれている",
+      "passed": true,
+      "evidence": "ステップ 9 に 'Draft リリースを開く → リリースノートを編集 → Publish release ボタンをクリック' の手順が含まれている"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  }
+}

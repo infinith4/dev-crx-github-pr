@@ -30,7 +30,12 @@
       "Write",
       "Edit",
       "Glob",
-      "Grep"
+      "Grep",
+      "Bash(chmod +x /workspaces/dev-crx-github-pr/scripts/push-github-secrets.sh)",
+      "Bash(bash -n /workspaces/dev-crx-github-pr/scripts/push-github-secrets.sh)",
+      "Bash(bash scripts/push-github-secrets.sh --dry-run)",
+      "Bash(xargs cat *)",
+      "Bash(gh api *)"
     ],
     "deny": [
       "Bash(rm -rf /)",

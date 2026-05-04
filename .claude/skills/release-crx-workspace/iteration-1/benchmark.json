@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "skill_name": "release-crx",
+    "skill_path": "c:\\Projects\\github\\infinith4\\dev-crx-github-pr\\.claude\\skills\\release-crx",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-29T00:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "normal-release-flow",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 65.5,
+        "tokens": 25786,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "package.json と manifest.json の両方のバージョンを変更する手順が含まれている", "passed": true, "evidence": "ステップ 2 で両ファイル更新手順が明示"},
+        {"text": "git tag v0.2.0 と git push origin v0.2.0 のコマンドが示されている", "passed": true, "evidence": "ステップ 4 に両コマンドが明示"},
+        {"text": "リリース前チェックリストに npm test と npm run build が含まれている", "passed": true, "evidence": "ステップ 3 チェックリストに両項目あり"},
+        {"text": "GitHub Actions のワークフロー監視コマンド（gh run list など）が示されている", "passed": true, "evidence": "ステップ 5 に gh run list / view / watch の 3 コマンドあり"},
+        {"text": "GitHub Release の draft 公開手順が含まれている", "passed": true, "evidence": "ステップ 6 に draft → Publish release の手順あり"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "normal-release-flow",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 51.4,
+        "tokens": 23388,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "package.json と manifest.json の両方のバージョンを変更する手順が含まれている", "passed": true, "evidence": "ステップ 1 で両ファイル更新コードブロックあり"},
+        {"text": "git tag v0.2.0 と git push origin v0.2.0 のコマンドが示されている", "passed": true, "evidence": "ステップ 7 と末尾チェックリストに両コマンドあり"},
+        {"text": "リリース前チェックリストに npm test と npm run build が含まれている", "passed": true, "evidence": "ステップ 2-3 と末尾チェックリストに両コマンドあり"},
+        {"text": "GitHub Actions のワークフロー監視コマンド（gh run list など）が示されている", "passed": false, "evidence": "ステップ 8 は UI 操作（Actions タブを開く）のみで gh run list などの CLI コマンドなし"},
+        {"text": "GitHub Release の draft 公開手順が含まれている", "passed": true, "evidence": "ステップ 9 に draft → Publish release の手順あり"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "version-mismatch-fix",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 45.9,
+        "tokens": 21049,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "manifest.json の version を 0.2.0 に変更する具体的な手順が示されている", "passed": true, "evidence": "ステップ 1 に変更箇所が明示"},
+        {"text": "node scripts/check-version.mjs を再実行して確認するよう指示している", "passed": true, "evidence": "ステップ 2 に再実行コマンドあり"},
+        {"text": "修正後に npm test または npm run build の実行を促している", "passed": true, "evidence": "ステップ 3 に npm test と npm run build あり"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "version-mismatch-fix",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 34.6,
+        "tokens": 17988,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "manifest.json の version を 0.2.0 に変更する具体的な手順が示されている", "passed": true, "evidence": "変更前後のコードブロック両方が示されている"},
+        {"text": "node scripts/check-version.mjs を再実行して確認するよう指示している", "passed": true, "evidence": "ステップ 2 に再実行コマンドあり"},
+        {"text": "修正後に npm test または npm run build の実行を促している", "passed": true, "evidence": "ステップ 3-4 に npm run build と npm test あり"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "workflow-failure-rollback",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 56.4,
+        "tokens": 27485,
+        "tool_calls": 8,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "gh run view または gh run watch でログを確認する手順が含まれている", "passed": true, "evidence": "セクション 1 に gh run view と gh run watch 両コマンドあり"},
+        {"text": "誤ったタグを削除するコマンド（git tag -d と git push origin --delete）が示されている", "passed": true, "evidence": "セクション 2 に git tag -d と git push origin --delete 両コマンドあり"},
+        {"text": "審査キャンセルの方法（Dashboard または cancelSubmission API）が含まれている", "passed": true, "evidence": "セクション 3 に cancelSubmission API と Dashboard 手順の両方あり"},
+        {"text": "修正後に新しいタグで再リリースする流れが説明されている", "passed": true, "evidence": "セクション 5 に git tag v0.3.0 と push の再リリース手順あり"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "workflow-failure-rollback",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 56.7,
+        "tokens": 21661,
+        "tool_calls": 9,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "gh run view または gh run watch でログを確認する手順が含まれている", "passed": true, "evidence": "セクション 1 に gh run view --log-failed と gh run watch 両コマンドあり"},
+        {"text": "誤ったタグを削除するコマンド（git tag -d と git push origin --delete）が示されている", "passed": true, "evidence": "git push origin --delete と git tag --delete の両コマンドあり（--delete は -d の長形式）"},
+        {"text": "審査キャンセルの方法（Dashboard または cancelSubmission API）が含まれている", "passed": true, "evidence": "方法 A（Dashboard）と方法 B（rollback API）の両手順あり。API エンドポイントは rollback だが概念はカバー"},
+        {"text": "修正後に新しいタグで再リリースする流れが説明されている", "passed": true, "evidence": "セクション 3 に git tag v0.3.0 と push の再リリース手順あり"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 55.9, "stddev": 8.0, "min": 45.9, "max": 65.5},
+      "tokens": {"mean": 24773, "stddev": 2723, "min": 21049, "max": 27485}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.933, "stddev": 0.094, "min": 0.8, "max": 1.0},
+      "time_seconds": {"mean": 47.6, "stddev": 9.4, "min": 34.6, "max": 56.7},
+      "tokens": {"mean": 21012, "stddev": 2252, "min": 17988, "max": 23388}
+    },
+    "delta": {
+      "pass_rate": "+0.067",
+      "time_seconds": "+8.3",
+      "tokens": "+3761"
+    }
+  },
+  "notes": [
+    "Eval 2 (version-mismatch-fix) と Eval 3 (workflow-failure-rollback) は with_skill / without_skill ともに満点 — これらは直接的な問題解決タスクのため skill なしでも対応可能",
+    "Eval 1 (normal-release-flow) で差が出た: with_skill は gh run list/view/watch の CLI コマンド 3 種を明示したが、without_skill は GitHub Actions タブの UI 操作に留まった",
+    "with_skill は SKILL.md 内の 6 ステップ構造に従い GitHub Release が draft で作成される点・CWS Secrets 未設定時の挙動を正確に反映した",
+    "without_skill は平均 8.3 秒・3761 tokens 少ないが、スキル固有の知識（実際のワークフロー動作、Secrets 未設定時の動作）は含まれていない",
+    "runs_per_configuration が 1 のため stddev は参考値。variance の信頼性向上には各 eval 3 回以上の実行を推奨"
+  ]
+}

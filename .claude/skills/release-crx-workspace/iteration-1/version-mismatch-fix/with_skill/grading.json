@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "manifest.json の version を 0.2.0 に変更する具体的な手順が示されている",
+      "passed": true,
+      "evidence": "ステップ 1 に '\"version\": \"0.2.0\"' への変更が明示され、package.json 側は変更不要との注記もある"
+    },
+    {
+      "text": "node scripts/check-version.mjs を再実行して確認するよう指示している",
+      "passed": true,
+      "evidence": "ステップ 2 に 'node scripts/check-version.mjs' の再実行が明示されている"
+    },
+    {
+      "text": "修正後に npm test または npm run build の実行を促している",
+      "passed": true,
+      "evidence": "ステップ 3 に 'npm test' と 'npm run build' の両コマンドが示され「両方が通ることを確認してから次へ進みます」との指示がある"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

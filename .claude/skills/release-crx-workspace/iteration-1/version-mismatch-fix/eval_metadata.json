@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "version-mismatch-fix",
+  "prompt": "Fix version mismatch: package.json is 0.2.0 but manifest.json is still 0.1.0, check-version.mjs fails",
+  "assertions": [
+    "Specific steps to update manifest.json version to 0.2.0 are shown",
+    "Instruction to re-run node scripts/check-version.mjs after fix",
+    "Prompt to run npm test or npm run build after fixing"
+  ]
+}

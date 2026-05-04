@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — GitHub PR Comment Tools</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        color: #1f2328;
+        font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+      }
+
+      header {
+        border-bottom: 1px solid #d0d7de;
+        padding: 16px 24px;
+      }
+
+      header a {
+        color: #1f2328;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      header a:hover { text-decoration: underline; }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 0 8px;
+        border-bottom: 1px solid #d0d7de;
+        padding-bottom: 16px;
+      }
+
+      .meta {
+        color: #656d76;
+        font-size: 0.875rem;
+        margin: 0 0 32px;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 40px 0 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #d0d7de;
+      }
+
+      p { margin: 0 0 16px; }
+
+      ul {
+        margin: 0 0 16px;
+        padding-left: 24px;
+      }
+
+      li { margin-bottom: 6px; }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0 0 16px;
+        font-size: 0.9375rem;
+      }
+
+      th, td {
+        border: 1px solid #d0d7de;
+        padding: 8px 12px;
+        text-align: left;
+      }
+
+      th {
+        background: #f6f8fa;
+        font-weight: 600;
+      }
+
+      code {
+        background: #f6f8fa;
+        border: 1px solid #d0d7de;
+        border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.875em;
+        padding: 2px 5px;
+      }
+
+      .callout {
+        background: #f6f8fa;
+        border: 1px solid #d0d7de;
+        border-left: 4px solid #0969da;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 0 0 16px;
+      }
+
+      a { color: #0969da; }
+      a:hover { text-decoration: underline; }
+
+      footer {
+        border-top: 1px solid #d0d7de;
+        color: #656d76;
+        font-size: 0.875rem;
+        padding: 24px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="https://github.com/infinith4/dev-crx-github-pr">GitHub PR Comment Tools</a>
+    </header>
+
+    <main>
+      <h1>Privacy Policy</h1>
+      <p class="meta">最終更新日: 2026年5月4日 &nbsp;|&nbsp; Last updated: May 4, 2026</p>
+
+      <p>
+        GitHub PR Comment Tools（以下「本拡張機能」）は、GitHub の Pull Request ページ上で折りたたまれたレビューコメントを展開し、レビュースレッドの resolve / unresolve 操作を提供します。
+        本ページは、本拡張機能がどのようなデータを扱うかを説明します。
+      </p>
+
+      <h2>収集・保存するデータ</h2>
+
+      <p>本拡張機能がお使いのブラウザの <code>chrome.storage.local</code> に保存するデータは以下のみです。</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>データ</th>
+            <th>内容</th>
+            <th>保存場所</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ユーザー設定</td>
+            <td>
+              コメント自動展開のオン/オフ、resolve/unresolve 操作の有効化、
+              解決済み・旧バージョンスレッドの表示設定、GitHub Enterprise ホスト一覧
+            </td>
+            <td><code>chrome.storage.local</code>（ブラウザ内のみ）</td>
+          </tr>
+          <tr>
+            <td>GitHub Personal Access Token</td>
+            <td>
+              resolve / unresolve 機能を有効にした場合のみ保存。
+              GitHub GraphQL API の呼び出しに使用。
+            </td>
+            <td><code>chrome.storage.local</code>（ブラウザ内のみ）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        これらのデータはお使いのデバイス上にのみ保存されます。
+        本拡張機能の開発者・運営者のサーバーには一切送信されません。
+      </div>
+
+      <h2>データの利用目的</h2>
+
+      <ul>
+        <li>
+          <strong>ユーザー設定</strong>: GitHub の PR ページを開いたとき、設定を読み込んでコメント展開の動作を制御するために使用します。
+        </li>
+        <li>
+          <strong>GitHub Personal Access Token</strong>: resolve / unresolve ボタンが押されたとき、GitHub GraphQL API（<code>https://api.github.com/graphql</code>）の呼び出しにのみ使用します。トークンは GitHub の API 以外に送信されることはありません。
+        </li>
+      </ul>
+
+      <h2>収集しないデータ</h2>
+
+      <ul>
+        <li>閲覧履歴・URL・ページの内容</li>
+        <li>氏名・メールアドレスなどの個人情報</li>
+        <li>クリック・スクロールなどの行動データ（アナリティクス）</li>
+        <li>クラッシュレポート・エラーログ</li>
+      </ul>
+
+      <h2>第三者へのデータ提供</h2>
+
+      <p>
+        本拡張機能は、ユーザーのデータを第三者に販売・提供・共有することはありません。
+        GitHub GraphQL API への通信は、ユーザーが resolve / unresolve 操作を実行したときのみ発生し、
+        送信先は <code>https://api.github.com</code> に限定されます。
+      </p>
+
+      <h2>リモートコード</h2>
+
+      <p>
+        本拡張機能はリモートコード（外部 CDN からの JS 読み込み、<code>eval()</code> の使用など）を使用しません。
+        すべての JavaScript はビルド時にパッケージ内にバンドルされています。
+      </p>
+
+      <h2>データの削除</h2>
+
+      <p>以下の方法でいつでも保存データを削除できます。</p>
+
+      <ul>
+        <li>本拡張機能をアンインストールする</li>
+        <li>Chrome の設定 → プライバシーとセキュリティ → サイトデータを削除 → 拡張機能のストレージをクリアする</li>
+        <li>Options ページでトークンを空欄にして保存する（トークンのみ削除）</li>
+      </ul>
+
+      <h2>本ポリシーの変更</h2>
+
+      <p>
+        本ポリシーを変更する場合は、このページを更新します。
+        重要な変更がある場合は、拡張機能のバージョンノートでお知らせします。
+      </p>
+
+      <h2>お問い合わせ</h2>
+
+      <p>
+        ご質問・ご意見は
+        <a href="https://github.com/infinith4/dev-crx-github-pr/issues" target="_blank" rel="noopener">GitHub Issues</a>
+        までお寄せください。
+      </p>
+    </main>
+
+    <footer>
+      &copy; 2026 GitHub PR Comment Tools &mdash;
+      <a href="https://github.com/infinith4/dev-crx-github-pr">Source on GitHub</a>
+    </footer>
+  </body>
+</html>
